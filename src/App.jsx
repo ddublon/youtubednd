@@ -16,13 +16,7 @@ function App() {
     "C",
     "C++",
     "C#",
-    "Java",
-    "JavaScript",
-    "Python",
-    "Ruby",
-    "PHP",
-    "Go",
-    "Swift",
+
   ]);
 
   const handleDragEnd = (event) => {
