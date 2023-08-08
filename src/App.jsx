@@ -9,15 +9,18 @@ import {
 } from "@dnd-kit/sortable";
 import { useState } from "react";
 import SortableItem from "./SortableItem.jsx";
-import "./abc.css";
+import styled from "styled-components";
+
+const StyledSortableContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+`;
 
 function App() {
-  const [languages, setLanguages] = useState([
-    "C",
-    "C++",
-    "C#",
-
-  ]);
+  const [languages, setLanguages] = useState(["C", "C++", "C#"]);
 
   const handleDragEnd = (event) => {
     console.log("Drag end called ");
@@ -42,7 +45,7 @@ function App() {
         collisionDetection={closestCenter}
         onDragEnd={(e) => handleDragEnd(e)}
       >
-        <div className="sortable-container">
+        <StyledSortableContainer>
           <SortableContext
             items={languages}
             strategy={horizontalListSortingStrategy}
@@ -55,7 +58,7 @@ function App() {
               />
             ))}
           </SortableContext>
-        </div>
+        </StyledSortableContainer>
       </DndContext>
     </>
   );

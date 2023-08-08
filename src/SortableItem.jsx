@@ -4,8 +4,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { Card, Button } from "react-bootstrap";
 import { useSortable } from "@dnd-kit/sortable";
 import Chart from "./Chart";
-
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 
 const SortableItem = ({ id, onDelete }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -14,23 +14,23 @@ const SortableItem = ({ id, onDelete }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    width: "fit-content",
+    width: (screen.width / 3) * 0.95,
   };
 
   return (
     <div ref={setNodeRef} style={style}>
-      <Card body className={"m-3"} >
+      <Card body className={"m-3"}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div {...attributes} {...listeners} style={{ cursor: "grab" }}>
             {/* The handle */}
             <span role="img" aria-label="handle">
-              🤚
+              <FontAwesomeIcon icon={faGripVertical} />
             </span>
           </div>
 
           {/* The delete button */}
           <Button
-            variant="danger"
+            variant=""
             onClick={(event) => {
               event.stopPropagation(); // This prevents the drag action from starting
               onDelete(id);
