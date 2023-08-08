@@ -1,6 +1,8 @@
 import React from "react";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
+import GreenLine from "./GreenLine";
+import PurpleLine from "./PurpleLine";
 
 const Chart = ({ numberOfGraphs }) => {
   const data = [
@@ -9,8 +11,8 @@ const Chart = ({ numberOfGraphs }) => {
   ];
 
   const options = {
-    width: (screen.width / 3) * 0.88,
-    height: 300,
+    width: (screen.width / numberOfGraphs) * 0.88,
+    height: 500,
     scales: {
       x: {
         time: false,
@@ -27,12 +29,16 @@ const Chart = ({ numberOfGraphs }) => {
     ],
   };
   return (
-    <UplotReact
-      options={options}
-      data={data}
-      onCreate={(chart) => {}}
-      onDelete={(chart) => {}}
-    />
+    <div style={{ position: "relative" }}>
+      <UplotReact
+        options={options}
+        data={data}
+        onCreate={(chart) => {}}
+        onDelete={(chart) => {}}
+      />
+      <GreenLine chartHeight={270} setLineHeight={() => {}} />
+      <PurpleLine chartHeight={220} setLineHeight={() => {}} />
+    </div>
   );
 };
 
