@@ -9,6 +9,8 @@ const Chart = ({ numberOfGraphs }) => {
     [0, 1, 2, 3, 4, 5],
     [0, 1, 2, 3, 4, 5],
   ];
+  let maxRange = 5;
+  let minRange = 0;
 
   const options = {
     width: (screen.width / numberOfGraphs) * 0.88,
@@ -16,9 +18,10 @@ const Chart = ({ numberOfGraphs }) => {
     scales: {
       x: {
         time: false,
-        range: [-0.5, 5.5],
       },
-      y: {},
+      y: {
+        range: [minRange, maxRange],
+      },
     },
     axes: [{}],
     series: [
@@ -36,8 +39,8 @@ const Chart = ({ numberOfGraphs }) => {
         onCreate={(chart) => {}}
         onDelete={(chart) => {}}
       />
-      <GreenLine chartHeight={270} setLineHeight={() => {}} />
-      <PurpleLine chartHeight={220} setLineHeight={() => {}} />
+      <GreenLine LineHeight={270} maxRange={maxRange} minRange={minRange} />
+      <PurpleLine LineHeight={220} maxRange={maxRange} minRange={minRange} />
     </div>
   );
 };
