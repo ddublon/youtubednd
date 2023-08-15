@@ -5,7 +5,7 @@ import Draggable from "react-draggable";
 const Line = styled.div`
   height: 2px;
   border-top: 2px dashed #26e020 !important;
-  width: 90%;
+  width: 80%;
   margin-left: 50px;
   z-index: 2;
   position: absolute;

@@ -6,7 +6,7 @@ const Line = styled.div`
   height: 2px;
   background-color: #c720e0 !important;
   border-top: 2px dashed #c720e0 !important;
-  width: 90%;
+  width: 80%;
   margin-left: 50px;
   z-index: 2;
   position: absolute;

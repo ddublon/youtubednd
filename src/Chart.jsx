@@ -14,7 +14,10 @@ const Chart = ({ numberOfGraphs }) => {
 
   const options = {
     width: (screen.width / numberOfGraphs) * 0.88,
-    height: 500,
+    height: 400,
+    legend: {
+      show: false,
+    },
     scales: {
       x: {
         time: false,
