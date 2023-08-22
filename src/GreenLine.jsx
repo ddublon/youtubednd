@@ -3,27 +3,27 @@ import styled from "styled-components";
 import Draggable from "react-draggable";
 
 const Line = styled.div`
-  height: 2px;
   border-top: 2px dashed #26e020 !important;
-  width: 80%;
-  margin-left: 50px;
+  width: 100%;
   z-index: 2;
   position: absolute;
-  top: ${(props) => props.top}px;
+  top: 0;
   cursor: grab;
 `;
 
-const GreenLine = ({ maxRange, minRange, LineHeight }) => {
+const GreenLine = ({ maxRange, minRange }) => {
+  const defaultPosition = 370;
+
   const nodeRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const calculateYValue = (y) => {
-    const dragPercentage = (y + 255) / 435;
+    const dragPercentage = y / 500;
     const value = maxRange - dragPercentage * (maxRange - minRange);
-    return value.toFixed(2);
+    return value.toFixed(5);
   };
 
-  const [yValue, setYValue] = useState(calculateYValue(LineHeight));
+  const [yValue, setYValue] = useState(calculateYValue(defaultPosition));
 
   const handleDragStop = (e, data) => {
     setIsDragging(false);
@@ -37,16 +37,16 @@ const GreenLine = ({ maxRange, minRange, LineHeight }) => {
     <Draggable
       axis="y"
       nodeRef={nodeRef}
-      bounds={{ top: -255, bottom: 180 }}
+      bounds="parent"
+      defaultPosition={{ x: 0, y: defaultPosition }}
       onStart={() => setIsDragging(true)}
       onStop={(e, data) => handleDragStop(e, data)}
       onDrag={(e, data) => handleDrag(e, data)}
     >
       <Line
-        className={`dragedLineToolTip ${isDragging ? "dragging" : ""}`}
+        className={`dragedLineToolTip green ${isDragging ? "dragging" : ""}`}
         data-tooltip={`Y: ${yValue}`}
         ref={nodeRef}
-        top={LineHeight}
         onMouseEnter={() => console.log("hovered")}
       />
     </Draggable>

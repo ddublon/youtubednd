@@ -94,7 +94,9 @@ function App() {
               ))}
             </SortableContext>
             <DragOverlay>
-              {activeId ? <Chart numberOfGraphs={5}></Chart> : null}
+              {activeId ? (
+                <Chart id={"overlay"} numberOfGraphs={5}></Chart>
+              ) : null}
             </DragOverlay>
           </StyledSortableContainer>
         </DndContext>
