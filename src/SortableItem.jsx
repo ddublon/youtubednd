@@ -42,7 +42,7 @@ const SortableItem = ({ id, onDelete, numberOfGraphs }) => {
         </div>
 
         {/* The item content */}
-        <Chart id={id} numberOfGraphs={numberOfGraphs} />
+        <Chart id={id} numGraphs={numberOfGraphs} />
       </Card>
     </div>
   );
