@@ -94,6 +94,7 @@ const drawExample = async (numGraphs, divElementId) => {
     }
   );
 
+  console.log("POINTS_LOOP", POINTS_LOOP, numGraphs) // check if numGraphs is defined
   // Create shared X-axis
   const xAxis = new CategoryAxis(wasmContext, {
     visibleRange: new NumberRange(0, POINTS_LOOP),
@@ -164,6 +165,7 @@ const drawExample = async (numGraphs, divElementId) => {
   };
 
   const handleStart = () => {
+    console.log("handleStart")
     if (timerId) {
       handleStop();
     }
@@ -184,6 +186,7 @@ export default function Chart({ numGraphs, id }) {
   const controlsRef = React.useRef();
   const divElementId = `chart-${id}`;
   React.useEffect(() => {
+    console.log("useEffect", divElementId)
     let autoStartTimerId;
     const chartInitialization = async () => {
       const res = await drawExample(numGraphs, divElementId);
@@ -194,6 +197,7 @@ export default function Chart({ numGraphs, id }) {
     };
     const chartInitializationPromise = chartInitialization();
     return () => {
+      console.log("unmount", divElementId)
       let deleted = false;
 
       if (sciChartSurfaceRef.current) {
