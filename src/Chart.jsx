@@ -100,6 +100,7 @@ const drawExample = async (numGraphs, divElementId) => {
     visibleRange: new NumberRange(0, POINTS_LOOP),
     isVisible: false,
   });
+  sciChartSurface.xAxes.add(xAxis)
 
   const yAxes = generateYAxisObjects(numGraphs, wasmContext);
   // Create LayoutManager and set the rightOuterAxesLayoutStrategy
