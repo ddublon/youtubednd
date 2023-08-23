@@ -44,7 +44,10 @@ const generateYAxisObjects = (count, wasmContext) => {
     const visibleRangeEnd = i * 0.1;
     const yAxis = new NumericAxis(wasmContext, {
       id: yAxisId,
-      visibleRange: new NumberRange(visibleRangeStart, visibleRangeEnd),
+      useNativeText: true,
+      allowFastMath: true,
+      visibleRange: new NumberRange(0.8, 1),
+      // visibleRange: new NumberRange(visibleRangeStart, visibleRangeEnd), // this seems to not work 
       isVisible: true,
     });
     yAxisObjects.push(yAxis);
@@ -98,6 +101,7 @@ const drawExample = async (numGraphs, divElementId) => {
   // Create shared X-axis
   const xAxis = new CategoryAxis(wasmContext, {
     visibleRange: new NumberRange(0, POINTS_LOOP),
+    allowFastMath: true,
     isVisible: false,
   });
   sciChartSurface.xAxes.add(xAxis)
@@ -109,17 +113,13 @@ const drawExample = async (numGraphs, divElementId) => {
       new RightAlignedOuterVerticallyStackedAxisLayoutStrategy();
   }
   sciChartSurface.yAxes.add(...yAxes);
-  const fifoSweepingGap = GAP_POINTS;
-  const dataSeries = new XyDataSeries(wasmContext, {
-    fifoCapacity: POINTS_LOOP,
-    fifoSweeping: true,
-    fifoSweepingGap,
-  });
 
   const dataSeriesArray = []; // Array to hold the data series for each graph
   for (let i = 0; i < numGraphs; i++) {
     const fifoSweepingGap = GAP_POINTS;
     const dataSeries = new XyDataSeries(wasmContext, {
+      dataIsSortedInX: true,
+      containsNaN: false,
       fifoCapacity: POINTS_LOOP,
       fifoSweeping: true,
       fifoSweepingGap,
@@ -152,10 +152,10 @@ const drawExample = async (numGraphs, divElementId) => {
     timerId = setTimeout(runUpdateDataOnTimeout, TIMER_TIMEOUT_MS);
   };
 
-  if (sciChartSurface.xAxes.length > 0 && sciChartSurface.yAxes.length > 0) {
-    sciChartSurface.zoomExtents();
-    sciChartSurface.zoomExtentsY();
-  }
+  // if (sciChartSurface.xAxes.length > 0 && sciChartSurface.yAxes.length > 0) {
+  //   sciChartSurface.zoomExtents();
+  //   sciChartSurface.zoomExtentsY();
+  // }
   // ZoomExtents() to show all graphs horizontally
   // sciChartSurface.zoomExtents();
 
@@ -172,6 +172,8 @@ const drawExample = async (numGraphs, divElementId) => {
     }
     runUpdateDataOnTimeout();
   };
+
+  handleStart()
 
   return {
     sciChartSurface,
