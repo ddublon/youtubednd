@@ -9,9 +9,10 @@ import {
   XyDataSeries,
   FastLineRenderableSeries,
   EllipsePointMarker,
+  HorizontalLineAnnotation,
+  ELabelPlacement,
 } from "scichart";
 import { vitalSignsEcgData } from "./vitalSignsEcgData";
-const divElementId = "chart";
 const STEP = 2_200;
 const TIMER_TIMEOUT_MS = 50;
 const POINTS_LOOP = 44_000 * 5; // 5 seconds
@@ -40,16 +41,13 @@ const generateYAxisObjects = (count, wasmContext) => {
   const yAxisObjects = [];
   for (let i = 1; i <= count; i++) {
     const yAxisId = `yAxis${i}`;
-    const visibleRangeStart = (i - 0.1) * 0.1;
-    const visibleRangeEnd = i * 0.1;
     const yAxis = new NumericAxis(wasmContext, {
       id: yAxisId,
       useNativeText: true,
       allowFastMath: true,
-      visibleRange: new NumberRange(0.8, 1),
-      // visibleRange: new NumberRange(visibleRangeStart, visibleRangeEnd), // this seems to not work 
       isVisible: true,
     });
+
     yAxisObjects.push(yAxis);
   }
   return yAxisObjects;
@@ -84,6 +82,18 @@ const addRenderableSeriesWithDynamicYAxis = (
         }),
       })
     );
+    sciChartSurface.annotations.add(
+      new HorizontalLineAnnotation({
+        labelPlacement: ELabelPlacement.Axis,
+        yAxisId: yAxis.id,
+        showLabel: true,
+        stroke: "Red",
+        strokeThickness: 2,
+        y1: 0.9, // use y1 from state here
+        axisLabelFill: "Red",
+        isEditable: true,
+      })
+    );
   } else {
     console.error(`Invalid number: ${number}`);
   }
@@ -97,14 +107,14 @@ const drawExample = async (numGraphs, divElementId) => {
     }
   );
 
-  console.log("POINTS_LOOP", POINTS_LOOP, numGraphs) // check if numGraphs is defined
+  console.log("POINTS_LOOP", POINTS_LOOP, numGraphs); // check if numGraphs is defined
   // Create shared X-axis
   const xAxis = new CategoryAxis(wasmContext, {
     visibleRange: new NumberRange(0, POINTS_LOOP),
     allowFastMath: true,
     isVisible: false,
   });
-  sciChartSurface.xAxes.add(xAxis)
+  sciChartSurface.xAxes.add(xAxis);
 
   const yAxes = generateYAxisObjects(numGraphs, wasmContext);
   // Create LayoutManager and set the rightOuterAxesLayoutStrategy
@@ -152,28 +162,19 @@ const drawExample = async (numGraphs, divElementId) => {
     timerId = setTimeout(runUpdateDataOnTimeout, TIMER_TIMEOUT_MS);
   };
 
-  // if (sciChartSurface.xAxes.length > 0 && sciChartSurface.yAxes.length > 0) {
-  //   sciChartSurface.zoomExtents();
-  //   sciChartSurface.zoomExtentsY();
-  // }
-  // ZoomExtents() to show all graphs horizontally
-  // sciChartSurface.zoomExtents();
-
-  // ZoomExtentsY() to show all graphs vertically
-  // sciChartSurface.zoomExtentsY();
   const handleStop = () => {
     clearTimeout(timerId);
   };
 
   const handleStart = () => {
-    console.log("handleStart")
+    console.log("handleStart");
     if (timerId) {
       handleStop();
     }
     runUpdateDataOnTimeout();
   };
 
-  handleStart()
+  handleStart();
 
   return {
     sciChartSurface,
@@ -189,18 +190,17 @@ export default function Chart({ numGraphs, id }) {
   const controlsRef = React.useRef();
   const divElementId = `chart-${id}`;
   React.useEffect(() => {
-    console.log("useEffect", divElementId)
+    console.log("useEffect", divElementId);
     let autoStartTimerId;
     const chartInitialization = async () => {
-      const res = await drawExample(numGraphs, divElementId);
+      const res = await drawExample(3, divElementId);
       sciChartSurfaceRef.current = res.sciChartSurface;
       controlsRef.current = res.controls;
-      // autoStartTimerId = setTimeout(res.controls.handleStart, 0);
       return res;
     };
     const chartInitializationPromise = chartInitialization();
     return () => {
-      console.log("unmount", divElementId)
+      console.log("unmount", divElementId);
       let deleted = false;
 
       if (sciChartSurfaceRef.current) {
@@ -227,7 +227,7 @@ export default function Chart({ numGraphs, id }) {
   }, []);
 
   return (
-    <>
+    <div style={{ height: "200px" }}>
       <div style={{ width: "100%", height: "100%" }} id={divElementId}></div>
       <button onClick={() => controlsRef.current?.handleStart()}>
         Start Timer
@@ -235,6 +235,6 @@ export default function Chart({ numGraphs, id }) {
       <button onClick={() => controlsRef.current?.handleStop()}>
         Stop Timer
       </button>
-    </>
+    </div>
   );
 }

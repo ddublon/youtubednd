@@ -1,6 +1,5 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container } from "react-bootstrap";
 import {
   DndContext,
   closestCenter,
@@ -31,18 +30,7 @@ const StyledSortableContainer = styled.div`
 
 function App() {
   const [activeId, setActiveId] = useState(null);
-  const [items, setItems] = useState([
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-  ]);
+  const [items, setItems] = useState(["0", "1", "2", "3"]);
 
   const handleDragEnd = (event) => {
     setActiveId(null);
@@ -74,7 +62,6 @@ function App() {
 
   return (
     <div>
-      <p>{`{}}`}</p>
       <div>
         <DndContext
           sensors={sensors}
@@ -101,16 +88,6 @@ function App() {
           </StyledSortableContainer>
         </DndContext>
       </div>
-      <p>{`{
-  "
-      },
-      "funding": {
-     
-      }
-    }
-  }
-}
-`}</p>
     </div>
   );
 }
