@@ -44,7 +44,10 @@ const generateYAxisObjects = (count, wasmContext) => {
     const visibleRangeEnd = i * 0.1;
     const yAxis = new NumericAxis(wasmContext, {
       id: yAxisId,
-      visibleRange: new NumberRange(visibleRangeStart, visibleRangeEnd),
+      useNativeText: true,
+      allowFastMath: true,
+      visibleRange: new NumberRange(0.8, 1),
+      // visibleRange: new NumberRange(visibleRangeStart, visibleRangeEnd), // this seems to not work 
       isVisible: true,
     });
     yAxisObjects.push(yAxis);
@@ -94,11 +97,14 @@ const drawExample = async (numGraphs, divElementId) => {
     }
   );
 
+  console.log("POINTS_LOOP", POINTS_LOOP, numGraphs) // check if numGraphs is defined
   // Create shared X-axis
   const xAxis = new CategoryAxis(wasmContext, {
     visibleRange: new NumberRange(0, POINTS_LOOP),
+    allowFastMath: true,
     isVisible: false,
   });
+  sciChartSurface.xAxes.add(xAxis)
 
   const yAxes = generateYAxisObjects(numGraphs, wasmContext);
   // Create LayoutManager and set the rightOuterAxesLayoutStrategy
@@ -107,17 +113,13 @@ const drawExample = async (numGraphs, divElementId) => {
       new RightAlignedOuterVerticallyStackedAxisLayoutStrategy();
   }
   sciChartSurface.yAxes.add(...yAxes);
-  const fifoSweepingGap = GAP_POINTS;
-  const dataSeries = new XyDataSeries(wasmContext, {
-    fifoCapacity: POINTS_LOOP,
-    fifoSweeping: true,
-    fifoSweepingGap,
-  });
 
   const dataSeriesArray = []; // Array to hold the data series for each graph
   for (let i = 0; i < numGraphs; i++) {
     const fifoSweepingGap = GAP_POINTS;
     const dataSeries = new XyDataSeries(wasmContext, {
+      dataIsSortedInX: true,
+      containsNaN: false,
       fifoCapacity: POINTS_LOOP,
       fifoSweeping: true,
       fifoSweepingGap,
@@ -150,10 +152,10 @@ const drawExample = async (numGraphs, divElementId) => {
     timerId = setTimeout(runUpdateDataOnTimeout, TIMER_TIMEOUT_MS);
   };
 
-  if (sciChartSurface.xAxes.length > 0 && sciChartSurface.yAxes.length > 0) {
-    sciChartSurface.zoomExtents();
-    sciChartSurface.zoomExtentsY();
-  }
+  // if (sciChartSurface.xAxes.length > 0 && sciChartSurface.yAxes.length > 0) {
+  //   sciChartSurface.zoomExtents();
+  //   sciChartSurface.zoomExtentsY();
+  // }
   // ZoomExtents() to show all graphs horizontally
   // sciChartSurface.zoomExtents();
 
@@ -164,11 +166,14 @@ const drawExample = async (numGraphs, divElementId) => {
   };
 
   const handleStart = () => {
+    console.log("handleStart")
     if (timerId) {
       handleStop();
     }
     runUpdateDataOnTimeout();
   };
+
+  handleStart()
 
   return {
     sciChartSurface,
@@ -184,6 +189,7 @@ export default function Chart({ numGraphs, id }) {
   const controlsRef = React.useRef();
   const divElementId = `chart-${id}`;
   React.useEffect(() => {
+    console.log("useEffect", divElementId)
     let autoStartTimerId;
     const chartInitialization = async () => {
       const res = await drawExample(numGraphs, divElementId);
@@ -194,6 +200,7 @@ export default function Chart({ numGraphs, id }) {
     };
     const chartInitializationPromise = chartInitialization();
     return () => {
+      console.log("unmount", divElementId)
       let deleted = false;
 
       if (sciChartSurfaceRef.current) {
