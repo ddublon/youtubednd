@@ -7,11 +7,6 @@ import Chart from "./Chart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGripVertical } from "@fortawesome/free-solid-svg-icons";
 
-
-
-
-
-
 const SortableItem = ({ id, onDelete, numberOfGraphs }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -20,7 +15,7 @@ const SortableItem = ({ id, onDelete, numberOfGraphs }) => {
     transform: CSS.Transform.toString(transform),
     transition,
     width: (screen.width / numberOfGraphs) * 0.95,
-    height: "500px",
+    // height: "500px",
   };
 
   return (
@@ -47,7 +42,7 @@ const SortableItem = ({ id, onDelete, numberOfGraphs }) => {
         </div>
 
         {/* The item content */}
-        <Chart numberOfGraphs={numberOfGraphs} />
+        <Chart id={id} numGraphs={numberOfGraphs} />
       </Card>
     </div>
   );
